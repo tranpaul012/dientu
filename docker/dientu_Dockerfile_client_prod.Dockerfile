@@ -1,18 +1,15 @@
 FROM node:24-bookworm
 
-WORKDIR /usr/src/dientu_client
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN corepack enable
 
-COPY client/package.json client/yarn.lock client/.yarnrc.yml ./
-COPY client/.yarn ./.yarn
+WORKDIR /usr/src/dientu_client
 
-RUN yarn install --immutable
+EXPOSE 7000
 
-COPY client .
-
-RUN yarn build
-
-EXPOSE 3000
-
-CMD ["sh", "-c", "yarn start -p ${PORT:-3000} -H ${HOSTNAME:-0.0.0.0}"]
+CMD ["bash"]
