@@ -1,0 +1,100 @@
+# =====================================================
+# Dientu E-commerce Development Environment
+# Author: Paul Tran
+# Description: Docker Compose cho DEV
+# =====================================================
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: ${POSTGRES_IMAGE:?Thiếu POSTGRES_IMAGE trong docker/.env.dev}
+    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_postgres_dev
+    build:
+      context: ..
+      dockerfile: docker/dientu_Dockerfile_postgres_dev.Dockerfile
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?Thiếu POSTGRES_DB trong docker/.env.dev}
+      POSTGRES_USER: ${POSTGRES_USER:?Thiếu POSTGRES_USER trong docker/.env.dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Thiếu POSTGRES_PASSWORD trong docker/.env.dev}
+    ports:
+      - "${POSTGRES_HOST_PORT:?Thiếu POSTGRES_HOST_PORT trong docker/.env.dev}:${POSTGRES_CONTAINER_PORT:?Thiếu POSTGRES_CONTAINER_PORT trong docker/.env.dev}"
+    volumes:
+      - ${POSTGRES_DATA_VOLUME:?Thiếu POSTGRES_DATA_VOLUME trong docker/.env.dev}:/var/lib/postgresql/data
+    command:
+      [
+        "postgres",
+        "-p",
+        "${POSTGRES_CONTAINER_PORT:?Thiếu POSTGRES_CONTAINER_PORT trong docker/.env.dev}",
+      ]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:?Thiếu POSTGRES_USER trong docker/.env.dev} -d ${POSTGRES_DB:?Thiếu POSTGRES_DB trong docker/.env.dev} -p ${POSTGRES_CONTAINER_PORT:?Thiếu POSTGRES_CONTAINER_PORT trong docker/.env.dev}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - dientu_network
+    restart: unless-stopped
+
+  # Server
+  server:
+    image: ${SERVER_IMAGE:?Thiếu SERVER_IMAGE trong docker/.env.dev}
+    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_server_dev
+    build:
+      context: ..
+      dockerfile: docker/dientu_Dockerfile_server_dev.Dockerfile
+    ports:
+      - "${SERVER_HOST_PORT:?Thiếu SERVER_HOST_PORT trong docker/.env.dev}:${SERVER_CONTAINER_PORT:?Thiếu SERVER_CONTAINER_PORT trong docker/.env.dev}"
+    volumes:
+      - ${SERVER_SOURCE_VOLUME:?Thiếu SERVER_SOURCE_VOLUME trong docker/.env.dev}:/usr/src/dientu_server
+    working_dir: /usr/src/dientu_server
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:?Thiếu POSTGRES_USER trong docker/.env.dev}:${POSTGRES_PASSWORD:?Thiếu POSTGRES_PASSWORD trong docker/.env.dev}@postgres:${POSTGRES_CONTAINER_PORT:?Thiếu POSTGRES_CONTAINER_PORT trong docker/.env.dev}/${POSTGRES_DB:?Thiếu POSTGRES_DB trong docker/.env.dev}
+      SERVER_HOST: ${SERVER_HOST:?Thiếu SERVER_HOST trong docker/.env.dev}
+      SERVER_PORT: ${SERVER_CONTAINER_PORT:?Thiếu SERVER_CONTAINER_PORT trong docker/.env.dev}
+    command: ["cargo", "watch", "-x", "run -p app"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dientu_network
+    stdin_open: true
+    tty: true
+
+  # Client
+  client:
+    image: ${CLIENT_IMAGE:?Thiếu CLIENT_IMAGE trong docker/.env.dev}
+    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_client_dev
+    build:
+      context: ..
+      dockerfile: docker/dientu_Dockerfile_client_dev.Dockerfile
+    ports:
+      - "${CLIENT_HOST_PORT:?Thiếu CLIENT_HOST_PORT trong docker/.env.dev}:${CLIENT_CONTAINER_PORT:?Thiếu CLIENT_CONTAINER_PORT trong docker/.env.dev}"
+    volumes:
+      - ${CLIENT_SOURCE_VOLUME:?Thiếu CLIENT_SOURCE_VOLUME trong docker/.env.dev}:/usr/src/dientu_client
+    working_dir: /usr/src/dientu_client
+    environment:
+      PORT: ${CLIENT_CONTAINER_PORT:?Thiếu CLIENT_CONTAINER_PORT trong docker/.env.dev}
+      HOSTNAME: ${CLIENT_HOST:?Thiếu CLIENT_HOST trong docker/.env.dev}
+    command:
+      [
+        "yarn",
+        "dev",
+        "-p",
+        "${CLIENT_CONTAINER_PORT:?Thiếu CLIENT_CONTAINER_PORT trong docker/.env.dev}",
+        "-H",
+        "${CLIENT_HOST:?Thiếu CLIENT_HOST trong docker/.env.dev}",
+      ]
+    networks:
+      - dientu_network
+    stdin_open: true
+    tty: true
+
+# Network docker
+networks:
+  dientu_network:
+    name: ${DOCKER_NETWORK:?Thiếu DOCKER_NETWORK trong docker/.env.dev}

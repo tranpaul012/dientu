@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  docker-compose:
+    name: Docker Compose
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate dev compose
+        run: docker compose --env-file docker/.env.dev -f docker/dientu_compose_dev.yaml config
+
+      - name: Validate prod compose
+        run: docker compose --env-file docker/.env.prod -f docker/dientu_compose_prod.yaml config
+
+  server:
+    name: Server
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        run: rustup update stable && rustup default stable
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Check code
+        run: cargo check --workspace --locked
+
+      - name: Run tests
+        run: cargo test --workspace --locked
+
+  client:
+    name: Client
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: client
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Build
+        run: yarn build

@@ -1,0 +1,14 @@
+# Thư mục build của Cargo (bắt buộc)
+/target
+
+# Các tệp lock của Cargo
+Cargo.lock
+
+# Các tệp tạm thời hoặc cache của IDE/Editor
+.idea/
+.vscode/
+*.rs.bk
+
+# Các tệp hệ điều hành
+.DS_Store
+Thumbs.db

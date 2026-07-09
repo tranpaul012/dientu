@@ -1,0 +1,77 @@
+# =====================================================
+# Dientu E-commerce Production Environment
+# Author: Paul Tran
+# Description: Docker Compose cho PROD
+# =====================================================
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:17-bookworm}
+    container_name: ${PROJECT_NAME:-dientu}_postgres_prod
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dientu_prod}
+      POSTGRES_USER: ${POSTGRES_USER:-dientu_prod}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:${POSTGRES_CONTAINER_PORT:-5432}"
+    volumes:
+      - ${POSTGRES_DATA_VOLUME:-dientu_postgres_prod_data}:/var/lib/postgresql/data
+    command: ["postgres", "-p", "${POSTGRES_CONTAINER_PORT:-5432}"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dientu_prod} -d ${POSTGRES_DB:-dientu_prod} -p ${POSTGRES_CONTAINER_PORT:-5432}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - dientu_network
+    restart: unless-stopped
+
+  # Server
+  server:
+    image: ${SERVER_IMAGE:-dientu_server:prod}
+    container_name: ${PROJECT_NAME:-dientu}_server_prod
+    build:
+      context: ..
+      dockerfile: docker/dientu_Dockerfile_server_prod.Dockerfile
+    ports:
+      - "${SERVER_HOST_PORT:-5000}:${SERVER_CONTAINER_PORT:-5000}"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dientu_prod}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_CONTAINER_PORT:-5432}/${POSTGRES_DB:-dientu_prod}
+      SERVER_HOST: ${SERVER_HOST:-0.0.0.0}
+      SERVER_PORT: ${SERVER_CONTAINER_PORT:-5000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dientu_network
+    restart: unless-stopped
+
+  # Client
+  client:
+    image: ${CLIENT_IMAGE:-dientu_client:prod}
+    container_name: ${PROJECT_NAME:-dientu}_client_prod
+    build:
+      context: ..
+      dockerfile: docker/dientu_Dockerfile_client_prod.Dockerfile
+    ports:
+      - "${CLIENT_HOST_PORT:-3000}:${CLIENT_CONTAINER_PORT:-3000}"
+    environment:
+      PORT: ${CLIENT_CONTAINER_PORT:-3000}
+      HOSTNAME: ${CLIENT_HOST:-0.0.0.0}
+    depends_on:
+      - server
+    networks:
+      - dientu_network
+    restart: unless-stopped
+
+# Network docker
+networks:
+  dientu_network:
+    name: ${DOCKER_NETWORK:-dientu_network_prod}
+
+# Volumes docker
+volumes:
+  dientu_postgres_prod_data:
+    name: ${POSTGRES_DATA_VOLUME:-dientu_postgres_prod_data}

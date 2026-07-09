@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+
+@import 'tailwindcss';
+:root {
+  --primary-1: 204 0 204;
+  --primary-2: 255 0 255;
+  --success: 0 128 0;
+  --error: 255 0 0;
+}
+
+@theme {
+  --color-primary-1: rgb(var(--primary-1));
+  --color-primary-2: rgb(var(--primary-2));
+  --color-success: rgb(var(--success));
+  --color-error: rgb(var(--error));
+  --color-bg-1: rgb(var(--bg-1));
+  --color-bg-2: rgb(var(--bg-2));
+  --color-bg-3: rgb(var(--bg-3));
+  --color-text-1: rgb(var(--text-1));
+  --color-text-2: rgb(var(--text-2));
+  --color-text-3: rgb(var(--text-3));
+}
+
+html[data-theme='light'] {
+  --text-1: 0 0 0;
+  --bg-1: 217 217 217;
+
+  --text-2: 26 26 26;
+  --bg-2: 242 242 242;
+
+  --text-3: 51 51 51;
+  --bg-3: 255 255 255;
+}
+
+html[data-theme='dark'] {
+  --text-1: 225 225 225;
+  --bg-1: 0 0 0;
+  --text-2: 235 235 235;
+  --bg-2: 25 25 25;
+  --text-3: 255 255 255;
+  --bg-3: 51 51 51;
+}
+
+@layer base {
+  html {
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  body {
+    background: rgb(var(--bg-2));
+    color: rgb(var(--text-2));
+  }
+
+  h1 {
+    @apply text-2xl font-bold text-primary-1 hover:text-primary-2;
+  }
+
+  .material-symbols-outlined {
+    font-size: inherit !important;
+    /* line-height: 1; */
+  }
+}
+
+@layer components {
+  .theme-1 {
+    background: rgb(var(--bg-1));
+    color: rgb(var(--text-1));
+  }
+
+  .theme-2 {
+    background: rgb(var(--bg-2));
+    color: rgb(var(--text-2));
+  }
+
+  .theme-3 {
+    background: rgb(var(--bg-3));
+    color: rgb(var(--text-3));
+  }
+
+  /* Scroll styling */
+  .content {
+    scroll-behavior: smooth;
+    scrollbar-color: rgb(59 130 246) rgb(229 231 235);
+    scrollbar-width: thin;
+  }
+
+  .content::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .content::-webkit-scrollbar-track {
+    background: rgb(229 231 235);
+    border-radius: 10px;
+  }
+
+  .content::-webkit-scrollbar-thumb {
+    background: rgb(59 130 246);
+    border-radius: 10px;
+    border: 2px solid rgb(229 231 235);
+  }
+
+  .content::-webkit-scrollbar-thumb:hover {
+    background: rgb(37 99 235);
+  }
+
+  html[data-theme='dark'] .content {
+    scrollbar-color: rgb(59 130 246) rgb(25 25 25);
+  }
+
+  html[data-theme='dark'] .content::-webkit-scrollbar-track {
+    background: rgb(25 25 25);
+  }
+
+  html[data-theme='dark'] .content::-webkit-scrollbar-thumb {
+    border-color: rgb(25 25 25);
+  }
+}
