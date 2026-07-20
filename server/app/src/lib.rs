@@ -2,4 +2,5 @@
 pub mod config;
 pub use config::get_env;
 
+pub mod database;
 pub mod graphql;

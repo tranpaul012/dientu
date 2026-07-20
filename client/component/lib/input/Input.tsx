@@ -14,15 +14,17 @@ function Input<T>({ name, value, attr, set_data, message_error }: Props<T>) {
     set_data((prev) => ({ ...prev, [attr]: e.target.value }));
   };
 
+  const inputType = attr.toLowerCase().includes('password') ? 'password' : 'text';
+
   return (
     <div className="text-left">
-      <div className="relative w-full mt-6 lib-input theme-1  rounded-md">
+      <div className="relative w-full mt-6 lib-input theme-1 rounded-md">
         <input
           id={attr}
-          type="text"
+          type={inputType}
           value={value ?? ''}
           onChange={handle_change}
-          autoComplete="given-name"
+          autoComplete={inputType === 'password' ? 'current-password' : 'username'}
           placeholder=" "
         />
         <label htmlFor={attr} className={message_error ? 'text-error' : 'text-success'}>

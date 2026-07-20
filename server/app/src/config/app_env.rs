@@ -7,7 +7,7 @@ static INIT: Once = Once::new();
 
 fn init_env() {
 	INIT.call_once(|| {
-		dotenvy::dotenv().ok();
+		dotenvy::from_filename(".env.dev").ok();
 	});
 }
 

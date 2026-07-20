@@ -12,20 +12,26 @@ type Props = {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
 };
 
-const Button = ({ type, children, link, className, icon, onSubmit }: Props) => {
+const Button = ({ type = 'button', children, link, className, icon, onSubmit }: Props) => {
+  const content = (
+    <div
+      className={
+        'flex items-center justify-center bg-primary-1 hover:bg-primary-2 cursor-pointer p-1 rounded-lg text-white ' +
+        (className ?? '')
+      }
+    >
+      {icon && <span className="material-symbols-outlined">{icon}</span>}
+      <span>{children ?? type}</span>
+    </div>
+  );
+
+  if (link) {
+    return <Link href={link}>{content}</Link>;
+  }
+
   return (
-    <button type={type} onClick={onSubmit}>
-      <Link href={link ?? ''}>
-        <div
-          className={
-            'flex items-center justify-center bg-primary-1 hover:bg-primary-2 cursor-pointer p-1 rounded-lg text-white ' +
-            className
-          }
-        >
-          {icon && <span className="material-symbols-outlined  ">{icon}</span>}
-          <span className="">{children ?? type ?? 'loading'}</span>
-        </div>
-      </Link>
+    <button type={type} onClick={onSubmit} className={className}>
+      {content}
     </button>
   );
 };

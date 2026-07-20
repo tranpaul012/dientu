@@ -29,7 +29,6 @@ function User({}: Props) {
     <div className="flex gap-4 flex-wrap justify-center">
       <Form<RegisterData>
         id="user-register"
-        class-name=" theme-3 w-70  mt-10 p-4 rounded-xl"
         data={{ username: '', email: '', password: '', re_password: '' }}
         get_data={register_handler}
         class_name=" theme-3 w-70  mt-10 p-4 rounded-xl"
@@ -44,7 +43,7 @@ function User({}: Props) {
           },
           { name: 'Email', value: '', attr: 'email', type: 'input' },
           { name: 'Password', value: '', attr: 'password', type: 'input' },
-          { name: 'Re Password', value: '', attr: 're-password', type: 'input' },
+          { name: 'Re Password', value: '', attr: 're_password', type: 'input' },
         ]}
       />
       <Form<LoginData>

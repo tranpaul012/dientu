@@ -56,7 +56,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:?Thiếu POSTGRES_USER trong docker/.env.dev}:${POSTGRES_PASSWORD:?Thiếu POSTGRES_PASSWORD trong docker/.env.dev}@postgres:${POSTGRES_CONTAINER_PORT:?Thiếu POSTGRES_CONTAINER_PORT trong docker/.env.dev}/${POSTGRES_DB:?Thiếu POSTGRES_DB trong docker/.env.dev}
       SERVER_HOST: ${SERVER_HOST:?Thiếu SERVER_HOST trong docker/.env.dev}
       SERVER_PORT: ${SERVER_CONTAINER_PORT:?Thiếu SERVER_CONTAINER_PORT trong docker/.env.dev}
-    command: ["cargo", "watch", "-x", "run -p app"]
+    command: ["sleep", "infinity"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -80,15 +80,7 @@ services:
     environment:
       PORT: ${CLIENT_CONTAINER_PORT:?Thiếu CLIENT_CONTAINER_PORT trong docker/.env.dev}
       HOSTNAME: ${CLIENT_HOST:?Thiếu CLIENT_HOST trong docker/.env.dev}
-    command:
-      [
-        "yarn",
-        "dev",
-        "-p",
-        "${CLIENT_CONTAINER_PORT:?Thiếu CLIENT_CONTAINER_PORT trong docker/.env.dev}",
-        "-H",
-        "${CLIENT_HOST:?Thiếu CLIENT_HOST trong docker/.env.dev}",
-      ]
+    command: ["sleep", "infinity"]
     networks:
       - dientu_network
     stdin_open: true
