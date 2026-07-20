@@ -8,7 +8,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: ${POSTGRES_IMAGE:?Thiếu POSTGRES_IMAGE trong docker/.env.dev}
-    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_postgres_dev
+    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_postgres
     build:
       context: ..
       dockerfile: docker/dientu_Dockerfile_postgres_dev.Dockerfile
@@ -43,7 +43,7 @@ services:
   # Server
   server:
     image: ${SERVER_IMAGE:?Thiếu SERVER_IMAGE trong docker/.env.dev}
-    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_server_dev
+    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_server
     build:
       context: ..
       dockerfile: docker/dientu_Dockerfile_server_dev.Dockerfile
@@ -68,7 +68,7 @@ services:
   # Client
   client:
     image: ${CLIENT_IMAGE:?Thiếu CLIENT_IMAGE trong docker/.env.dev}
-    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_client_dev
+    container_name: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}_client
     build:
       context: ..
       dockerfile: docker/dientu_Dockerfile_client_dev.Dockerfile
