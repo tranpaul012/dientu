@@ -1,6 +1,6 @@
 # Dientu
 
-## Docker DEV
+## Docker
 
 Chạy bằng Makefile ở root project:
 
