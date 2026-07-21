@@ -1,5 +1,10 @@
 # Dientu
 
+## LEE
+
+ok
+test
+
 ## Docker
 
 Chạy bằng Makefile ở root project:
