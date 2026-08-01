@@ -20,32 +20,34 @@ help:
 	@echo "  prod_reload  Rebuild and reload production services"
 	@echo "  git_push     Commit and push changes (use m=message)"
 
-docker dev up:
+dev_up:
 	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) up -d
 
-docker dev down:
+dev_down:
 	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) down
 
-docker dev restart:
+dev_restart:
 	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) restart
 
-docker dev reload:
+dev_reload:
 	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) up -d --build
 
-docker prod up:
+prod_up:
 	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) up -d
 
-docker prod down:
+prod_down:
 	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) down
 
-docker prod restart:
+prod_restart:
 	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) restart
 
-docker prod reload:
+prod_reload:
 	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) up -d --build
 
-git push:
-	
+git_push:
+	@if [ -z "$(m)" ]; then \
+		echo "Error: please set m=commit message"; exit 1; \
+	fi
 	@echo "=== Git add ==="
 	git add .
 	@echo "=== Git commit ==="
