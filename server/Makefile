@@ -1,3 +1,5 @@
+.PHONY: dev build run check fmt clippy test clean
+
 dev:
 	cargo watch -c -w app/src -x "run -p app"
 

@@ -13,7 +13,6 @@ pub async fn connect() -> anyhow::Result<DatabaseConnection> {
 		.connect_timeout(Duration::from_secs(10))
 		.idle_timeout(Duration::from_secs(300))
 		.sqlx_logging(false);
-
 	let connection = Database::connect(options).await?;
 	Ok(connection)
 }

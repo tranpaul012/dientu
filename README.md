@@ -1,23 +1,20 @@
 # Dientu
 
-## LEE
-
-ok
-test
-
 ## Docker
 
-Chạy bằng Makefile ở root project:
+Chạy trực tiếp bằng Docker Compose (không cần Makefile):
 
 ```bash
-make up
-make build
-make reload
-make down
-make ci
+docker compose --env-file docker/.env.dev -f docker/dientu_compose_dev.yaml up --build
 ```
 
-Nếu đang đứng trong thư mục `docker`:
+Server sẽ khởi động dưới dạng container chờ và không tự chạy ứng dụng. Để chạy server thủ công:
+
+```bash
+docker compose exec server cargo run
+```
+
+Nếu muốn dùng lệnh khởi động trực tiếp trong thư mục `docker`:
 
 ```bash
 docker compose --env-file .env.dev -f dientu_compose_dev.yaml up --build
@@ -39,7 +36,7 @@ Env chính nằm ở `docker/.env.dev`, ví dụ:
 
 ## Docker PROD
 
-Đổi mật khẩu trong `docker/.env.prod` trước khi chạy production.
+Đổi  mật khẩu trong `docker/.env.prod` trước khi chạy production.
 
 ```bash
 docker compose --env-file docker/.env.prod -f docker/dientu_compose_prod.yaml up --build -d

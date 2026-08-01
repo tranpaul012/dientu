@@ -1,5 +1,5 @@
 [workspace]
-members = ["lib_macro", "app", "fix"]
+members = ["lib_macro", "app", "fix", "migration"]
 resolver = "2"
 
 [workspace.dependencies]

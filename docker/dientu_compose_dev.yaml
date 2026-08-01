@@ -53,6 +53,7 @@ services:
       - ${SERVER_SOURCE_VOLUME:?Thiếu SERVER_SOURCE_VOLUME trong docker/.env.dev}:/usr/src/dientu_server
     working_dir: /usr/src/dientu_server
     environment:
+      PROJECT_NAME: ${PROJECT_NAME:?Thiếu PROJECT_NAME trong docker/.env.dev}
       DATABASE_URL: postgresql://${POSTGRES_USER:?Thiếu POSTGRES_USER trong docker/.env.dev}:${POSTGRES_PASSWORD:?Thiếu POSTGRES_PASSWORD trong docker/.env.dev}@postgres:${POSTGRES_CONTAINER_PORT:?Thiếu POSTGRES_CONTAINER_PORT trong docker/.env.dev}/${POSTGRES_DB:?Thiếu POSTGRES_DB trong docker/.env.dev}
       SERVER_HOST: ${SERVER_HOST:?Thiếu SERVER_HOST trong docker/.env.dev}
       SERVER_PORT: ${SERVER_CONTAINER_PORT:?Thiếu SERVER_CONTAINER_PORT trong docker/.env.dev}
