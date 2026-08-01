@@ -51,4 +51,4 @@ git push:
 	@echo "=== Git commit ==="
 	git commit -m "$(m)"
 	@echo "=== Git push ==="
-	git push
+	git push --set-upstream origin $(shell git rev-parse --abbrev-ref HEAD)
