@@ -1,0 +1,54 @@
+SHELL := /bin/bash
+
+COMPOSE_DEV_FILE := docker/dientu_compose_dev.yaml
+COMPOSE_PROD_FILE := docker/dientu_compose_prod.yaml
+ENV_DEV_FILE := .env.dev
+ENV_PROD_FILE := .env.prod
+
+.PHONY: help dev_up dev_down dev_restart dev_reload prod_up prod_down prod_restart prod_reload git_push
+
+help:
+	@echo "Usage: make <target>"
+	@echo "Targets:"
+	@echo "  dev_up       Start development services in detached mode"
+	@echo "  dev_down     Stop development services"
+	@echo "  dev_restart  Restart development services"
+	@echo "  dev_reload   Rebuild and reload development services"
+	@echo "  prod_up      Start production services in detached mode"
+	@echo "  prod_down    Stop production services"
+	@echo "  prod_restart Restart production services"
+	@echo "  prod_reload  Rebuild and reload production services"
+	@echo "  git_push     Commit and push changes (use m=message)"
+
+docker dev up:
+	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) up -d
+
+docker dev down:
+	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) down
+
+docker dev restart:
+	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) restart
+
+docker dev reload:
+	docker compose --env-file $(ENV_DEV_FILE) -f $(COMPOSE_DEV_FILE) up -d --build
+
+docker prod up:
+	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) up -d
+
+docker prod down:
+	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) down
+
+docker prod restart:
+	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) restart
+
+docker prod reload:
+	docker compose --env-file $(ENV_PROD_FILE) -f $(COMPOSE_PROD_FILE) up -d --build
+
+git push:
+	
+	@echo "=== Git add ==="
+	git add .
+	@echo "=== Git commit ==="
+	git commit -m "$(m)"
+	@echo "=== Git push ==="
+	git push
