@@ -48,7 +48,7 @@ services:
       context: ..
       dockerfile: docker/dientu_Dockerfile_server_dev.Dockerfile
     ports:
-      - "${SERVER_HOST_PORT:?Thiếu SERVER_HOST_PORT trong docker/.env.dev}:${SERVER_CONTAINER_PORT:?Thiếu SERVER_CONTAINER_PORT trong docker/.env.dev}"
+      - "${SERVER_PORT:?Thiếu SERVER_HOST_PORT trong docker/.env.dev}:${SERVER_CONTAINER_PORT:?Thiếu SERVER_CONTAINER_PORT trong docker/.env.dev}"
     volumes:
       - ${SERVER_SOURCE_VOLUME:?Thiếu SERVER_SOURCE_VOLUME trong docker/.env.dev}:/usr/src/dientu_server
     working_dir: /usr/src/dientu_server

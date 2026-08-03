@@ -1,7 +1,7 @@
 use std::env::{self};
 use std::sync::Once;
 
-use anyhow::anyhow;
+// use anyhow::anyhow;
 
 static INIT: Once = Once::new();
 
@@ -12,15 +12,13 @@ fn init_env() {
 }
 
 #[track_caller]
-pub fn get_env(key: &str) -> anyhow::Result<String> {
-	let location = std::panic::Location::caller();
-	init_env();
-	env::var(key).map_err(|_| {
-		anyhow!(
-			"Thiếu biến môi trường: '{}' tại {}:{}",
-			key,
-			location.file(),
-			location.line()
-		)
-	})
+pub fn get_env(key: &str) -> String {
+	let env = env::var(key);
+	match env {
+		Ok(value) => value,
+		Err(_) => {
+			init_env();
+			env::var(key).unwrap_or_else(|_| panic!("không xác định env này :{}", key))
+		}
+	}
 }
